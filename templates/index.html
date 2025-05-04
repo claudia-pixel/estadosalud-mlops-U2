@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Diagnóstico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        form {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        h1 {
+            color: #333;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Formulario de Captura de Signos Vitales</h1>
+    <form id="diagnosisForm">
+        <label for="temperature">Temperatura (Cº):</label><br>
+        <input type="number" id="temperature" name="temperature" step="0.1" required><br><br>
+
+        <label for="heart_rate">Latidos por minuto:</label><br>
+        <input type="number" id="heart_rate" name="heart_rate" required><br><br>
+
+        <label for="oxygen_saturation">Saturación (%):</label><br>
+        <input type="number" id="oxygen_saturation" name="oxygen_saturation" required><br><br>
+
+        <button type="button" onclick="sendDiagnosis()">Consultar Diagnóstico</button>
+    </form>
+
+    <h2 id="result"></h2>
+
+    <script>
+        function sendDiagnosis() {
+            const temperature = document.getElementById('temperature').value;
+            const heart_rate = document.getElementById('heart_rate').value;
+            const oxygen_saturation = document.getElementById('oxygen_saturation').value;
+
+            fetch('/diagnose', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    temperature: temperature,
+                    heart_rate: heart_rate,
+                    oxygen_saturation: oxygen_saturation
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Diagnóstico: ' + data.diagnosis;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
