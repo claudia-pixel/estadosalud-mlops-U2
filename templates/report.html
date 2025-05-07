@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Diagnósticos</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; flex-direction: column; align-items: center; }
+        h1, h2 { color: #333; }
+        .report-container { background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 80%; max-width: 900px; }
+        .diagnosis-counts { margin-bottom: 20px; }
+        .last-predictions { margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .export-button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .export-button:hover { background-color: #0056b3; }
+        p { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <h1>Reporte de Diagnósticos</h1>
+
+        <div class="diagnosis-counts">
+            <h2>Número de Diagnósticos por Resultado</h2>
+            <ul>
+                {% for diagnosis, count in diagnosis_counts.items() %}
+                    <li>{{ diagnosis }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="last-predictions">
+            <h2>Últimas 5 Predicciones</h2>
+            {% if last_5_predictions %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha y Hora</th>
+                        <th>Temperatura</th>
+                        <th>Latidos</th>
+                        <th>Saturación</th>
+                        <th>Diagnóstico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prediction in last_5_predictions %}
+                    <tr>
+                        <td>{{ prediction.fecha_hora }}</td>
+                        <td>{{ prediction.temperatura }}</td>
+                        <td>{{ prediction.latidos }}</td>
+                        <td>{{ prediction.saturacion }}</td>
+                        <td>{{ prediction.diagnostico }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p>Fecha de la última predicción: {{ last_prediction_date }}</p>
+            {% else %}
+            <p>No hay predicciones registradas.</p>
+            {% endif %}
+        </div>
+
+        <a href="/export_log" class="export-button">Exportar Log a CSV</a>
+    </div>
+</body>
+</html>
