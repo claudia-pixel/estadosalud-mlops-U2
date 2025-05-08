@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 import datetime
 import os
 import json
+import csv
+from io import StringIO
 
 app = Flask(__name__)
 LOG_FILE = 'diagnostics.log'
@@ -78,12 +80,26 @@ def report():
 def export_log():
     if os.path.exists(LOG_FILE):
         with open(LOG_FILE, 'r') as f:
-            log_content = f.read()
-        response = Response(log_content, mimetype='text/csv')
-        response.headers['Content-Disposition'] = 'attachment; filename=diagnostics.csv'
-        return response
+            log_data = []
+            for line in f:
+                try:
+                    log_data.append(json.loads(line.strip()))
+                except json.JSONDecodeError:
+                    continue
+
+        if log_data:
+            output = StringIO()
+            writer = csv.writer(output)
+            writer.writerow(['Fecha y Hora', 'Temperatura', 'Latidos', 'Saturación', 'Diagnóstico'])
+            for entry in log_data:
+                writer.writerow([entry['fecha_hora'], entry['temperatura'], entry['latidos'], entry['saturacion'], entry['diagnostico']])
+
+            csv_content = output.getvalue()
+            response = Response(csv_content, mimetype='text/csv')
+            response.headers['Content-Disposition'] = 'attachment; filename=diagnostics.csv'
+            return response
+
     return "No hay registros para exportar."
 
 if __name__ == '__main__':
-    from flask import Response
     app.run(debug=True, host='0.0.0.0')

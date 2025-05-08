@@ -13,8 +13,8 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
-        .export-button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; }
-        .export-button:hover { background-color: #0056b3; }
+        .export-button, .back-button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; margin-right: 10px; }
+        .export-button:hover, .back-button:hover { background-color: #0056b3; }
         p { margin-top: 10px; font-weight: bold; }
     </style>
 </head>
@@ -63,6 +63,7 @@
         </div>
 
         <a href="/export_log" class="export-button">Exportar Log a CSV</a>
+        <a href="/" class="back-button">Regresar</a>
     </div>
 </body>
 </html>
