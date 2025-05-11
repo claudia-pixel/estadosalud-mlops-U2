@@ -63,12 +63,17 @@ def report():
                 except json.JSONDecodeError:
                     pass
 
+    # Contar diagnósticos
     diagnosis_counts = {}
     for entry in log_data:
         diagnosis = entry['diagnostico']
         diagnosis_counts[diagnosis] = diagnosis_counts.get(diagnosis, 0) + 1
 
-    last_5_predictions = sorted(log_data, key=lambda x: x['fecha_hora'], reverse=True)[:5]
+    # Ordenar por fecha y tomar las últimas 5
+    log_data_sorted = sorted(log_data, key=lambda x: x.get('fecha_hora', ''), reverse=True)
+    last_5_predictions = log_data_sorted[:5]
+
+    # Tomar fecha de la última predicción
     last_prediction_date = last_5_predictions[0]['fecha_hora'] if last_5_predictions else 'No hay predicciones'
 
     return render_template('report.html',
