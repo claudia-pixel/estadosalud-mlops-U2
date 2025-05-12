@@ -24,7 +24,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3
         with:
-          message: "CI/CD en acción. Ejecutando tareas …"
+          message: "CI/CD en accion. Ejecutando tareas …"
           github-token: ${{ github.token }}
 
       - name: Configurar Python
