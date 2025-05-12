@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+permissions:
+  pull-requests: write
+  contents: read # Necesario para checkout
+
 jobs:
   pruebas:
     runs-on: ubuntu-latest
@@ -21,6 +25,7 @@ jobs:
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: "CI/CD en acción. Ejecutando tareas …"
+          github-token: ${{ github.token }} # Asegúrate de pasar el token
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -43,6 +48,7 @@ jobs:
           message: |
             CI/CD finalizado.
             Resultado de las pruebas unitarias: ${{ job.status }}
+          github-token: ${{ github.token }} # Asegúrate de pasar el token
 
   pruebas_y_publicacion:
     runs-on: ubuntu-latest
