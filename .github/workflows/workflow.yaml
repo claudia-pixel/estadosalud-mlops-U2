@@ -24,7 +24,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3
         with:
-          message: "CI/CD en accion. Ejecutando tareas …"
+          message: "CI/CD en acción. Ejecutando tareas …"
           github-token: ${{ github.token }}
 
       - name: Configurar Python
@@ -83,4 +83,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/${{ github.repository.toLower() }}:${{ github.ref == 'refs/heads/main' && 'latest' || github.ref_name }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.sha }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ job.started_at }}
