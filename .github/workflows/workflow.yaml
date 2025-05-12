@@ -30,7 +30,7 @@ jobs:
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9' # o la versión de Python que uses
+          python-version: '3.9'
 
       - name: Instalar dependencias
         run: pip install -r requirements.txt
@@ -53,7 +53,7 @@ jobs:
 
   pruebas_y_publicacion:
     runs-on: ubuntu-latest
-    needs: pruebas # Asegura que el job de pruebas pase antes de este
+    needs: pruebas
 
     steps:
       - name: Checkout del código
@@ -62,7 +62,7 @@ jobs:
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9' # o la versión de Python que uses
+          python-version: '3.9'
 
       - name: Instalar dependencias
         run: pip install -r requirements.txt
@@ -70,6 +70,9 @@ jobs:
       - name: Añadir la raíz del proyecto al PYTHONPATH
         run: |
           echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
+      - name: Convertir nombre del repositorio a minúsculas
+        run: echo "REPO_NAME_LOWER=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Loguearse en GitHub Packages
         uses: docker/login-action@v3
@@ -83,7 +86,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ lower(github.repository) }}:${{ github.ref == 'refs/heads/main' && 'latest' || github.ref_name }}
+          tags: ghcr.io/${{ env.REPO_NAME_LOWER }}:${{ github.ref == 'refs/heads/main' && 'latest' || github.ref_name }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.sha }}
             org.opencontainers.image.revision=${{ github.sha }}
