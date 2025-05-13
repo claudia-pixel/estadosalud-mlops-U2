@@ -74,6 +74,14 @@ jobs:
       - name: Convertir nombre del repositorio a minúsculas
         run: echo "REPO_NAME_LOWER=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
+      - name: Determinar tag para Docker (sanitize)
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "TAG_NAME=latest" >> $GITHUB_ENV
+          else
+            echo "TAG_NAME=$(echo '${{ github.ref_name }}' | tr '/' '-')" >> $GITHUB_ENV
+          fi
+
       - name: Loguearse en GitHub Packages
         uses: docker/login-action@v3
         with:
@@ -86,7 +94,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ env.REPO_NAME_LOWER }}:${{ github.ref == 'refs/heads/main' && 'latest' || github.ref_name }}
+          tags: ghcr.io/${{ env.REPO_NAME_LOWER }}:${{ env.TAG_NAME }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.sha }}
             org.opencontainers.image.revision=${{ github.sha }}
