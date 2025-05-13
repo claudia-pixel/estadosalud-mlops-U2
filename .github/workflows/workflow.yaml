@@ -11,6 +11,7 @@ on:
 permissions:
   pull-requests: write
   contents: read
+  packages: write
 
 jobs:
   pruebas:
@@ -36,8 +37,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Añadir la raíz del proyecto al PYTHONPATH
-        run: |
-          echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Correr pruebas unitarias con pytest
         run: pytest tests/
@@ -68,14 +68,12 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Añadir la raíz del proyecto al PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
+      - name: Definir nombre de usuario y branch
         run: |
-          echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
-
-      - name: Definir nombre de usuario en minúsculas
-        run: echo "USERNAME_LOWER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
-      - name: Normalizar nombre de rama para el tag
-        run: echo "BRANCH_TAG=$(echo '${{ github.ref_name }}' | tr '/' '-')" >> $GITHUB_ENV
+          echo "USERNAME_LOWER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "BRANCH_TAG=$(echo '${{ github.ref_name }}' | tr '/' '-')" >> $GITHUB_ENV
 
       - name: Iniciar sesión en GitHub Packages
         uses: docker/login-action@v3
@@ -93,4 +91,4 @@ jobs:
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.sha }}
             org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.created=${{ job.started_at }}
+            org.opencontainers.image.created=${{ github.run_started_at }}
