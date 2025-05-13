@@ -74,7 +74,10 @@ jobs:
       - name: Definir nombre de usuario en minúsculas
         run: echo "USERNAME_LOWER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
-      - name: Loguearse en GitHub Packages
+      - name: Normalizar nombre de rama para el tag
+        run: echo "BRANCH_TAG=$(echo '${{ github.ref_name }}' | tr '/' '-')" >> $GITHUB_ENV
+
+      - name: Iniciar sesión en GitHub Packages
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -86,7 +89,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ env.USERNAME_LOWER }}/estadosalud-mlops:${{ github.ref == 'refs/heads/main' && 'latest' || github.ref_name }}
+          tags: ghcr.io/${{ env.USERNAME_LOWER }}/estadosalud-mlops:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.sha }}
             org.opencontainers.image.revision=${{ github.sha }}
