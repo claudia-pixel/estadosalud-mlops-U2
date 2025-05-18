@@ -127,10 +127,10 @@ pytest tests/
 
 ### Imagen Docker Publicada
 
-Encontrarás la imagen publicada en la sección "Packages" de tu repositorio:
+Puedes obtener la imagen más reciente directamente con:
 
 ```
-ghcr.io/tu_usuario/tu_repositorio:latest
+docker pull ghcr.io/claudia-pixel/estadosalud-mlops:latest
 ```
 
 ---
