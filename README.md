@@ -1,10 +1,10 @@
-# Sistema de Diagnóstico Simple con Flask y Docker
+# 🩺 Sistema de Diagnóstico Simple con Flask y Docker
 
 Esta aplicación web, desarrollada con **Flask**, permite realizar un diagnóstico básico de salud ingresando tres signos vitales: temperatura corporal, frecuencia cardíaca y saturación de oxígeno. El sistema no solo provee un diagnóstico instantáneo, sino que también ofrece un reporte de las predicciones almacenadas y está configurado para un flujo de trabajo CI/CD robusto utilizando **GitHub Actions** y **Docker**.
 
 ---
 
-## Funcionalidad
+## 🩺 Funcionalidad
 
 La aplicación consta de dos funcionalidades principales:
 
@@ -25,28 +25,28 @@ La aplicación consta de dos funcionalidades principales:
 
 ---
 
-## Estructura del Proyecto
+## 🗂️ Estructura del Proyecto
 
 ```
 .
 ├── .github/
 │   └── workflows/
-│       └── workflow.yaml         # Configuración de GitHub Actions para CI/CD
-├── app.py                        # Lógica principal de la aplicación Flask y función de diagnóstico
+│       └── workflow.yaml       # Configuración de GitHub Actions para CI/CD
+├── app.py                      # Lógica principal de la aplicación Flask y función de diagnóstico
 ├── templates/
-│   ├── index.html                # Interfaz web para el formulario de diagnóstico
-│   └── report.html               # Plantilla HTML para la página de reporte de diagnósticos
+│   ├── index.html              # Interfaz web para el formulario de diagnóstico
+│   └── report.html             # Plantilla HTML para la página de reporte de diagnósticos
 ├── tests/
-│   ├── test_app_diag.py          # Pruebas unitarias para la lógica de diagnóstico en app.py
-│   └── test_app_rep.py           # Pruebas unitarias para la funcionalidad de reporte en app.py
-├── Dockerfile                    # Define cómo construir la imagen Docker para la aplicación
-├── README.md                     # Documento actual con información sobre el proyecto
-└── requirements.txt              # Lista de dependencias de Python necesarias
+│   ├── test_app_diag.py        # Pruebas unitarias para la lógica de diagnóstico en app.py
+│   └── test_app_rep.py         # Pruebas unitarias para la funcionalidad de reporte en app.py
+├── Dockerfile                  # Define cómo construir la imagen Docker para la aplicación
+├── README.md                   # Documento actual con información sobre el proyecto
+└── requirements.txt            # Lista de dependencias de Python necesarias
 ```
 
 ---
 
-## Prerrequisitos
+## 🛠️ Prerrequisitos
 
 Antes de comenzar, asegúrate de tener instalado:
 
@@ -57,7 +57,7 @@ Antes de comenzar, asegúrate de tener instalado:
 
 ---
 
-## Instrucciones para Ejecutar la Aplicación Localmente
+## 🚀 Instrucciones para Ejecutar la Aplicación Localmente
 
 ### 1. Clonar el Repositorio
 
@@ -66,13 +66,18 @@ git clone https://github.com/tu_usuario/estadosalud-mlops-U2.git
 cd estadosalud-mlops-U2
 ```
 
-_Reemplaza `tu_usuario` con tu nombre de usuario de GitHub y `estadosalud-mlops-U2` con el nombre de tu repositorio real si es diferente._
+(Reemplaza `tu_usuario` con tu nombre de usuario de GitHub si es diferente).
 
 ### 2. Construir la Imagen de Docker
 
 ```bash
 docker build -t sistema-diagnostico .
 ```
+
+Explicación:
+- `docker build`: Inicia el proceso de construcción.
+- `-t sistema-diagnostico`: Nombra la imagen.
+- `.`: Usa el directorio actual como contexto.
 
 ### 3. Ejecutar el Contenedor
 
@@ -82,7 +87,8 @@ docker run -p 5000:5000 sistema-diagnostico
 
 ### 4. Acceder a la Aplicación
 
-Abre tu navegador en `http://localhost:5000/` para usar el formulario. Visita `http://localhost:5000/report` para ver el reporte.
+- Diagnóstico: [http://localhost:5000](http://localhost:5000)
+- Reporte: [http://localhost:5000/report](http://localhost:5000/report)
 
 ### 5. Detener el Contenedor
 
@@ -93,9 +99,11 @@ docker stop <ID_DEL_CONTENEDOR>
 
 ---
 
-## Pruebas Unitarias
+## 🧪 Pruebas Unitarias
 
-Asegúrate de estar en el directorio raíz del proyecto y luego:
+Este proyecto incluye pruebas con `pytest`.
+
+### Ejecutar Pruebas Localmente
 
 ```bash
 pip install -r requirements.txt
@@ -105,35 +113,39 @@ pytest tests/
 
 ---
 
-## Integración Continua / Despliegue Continuo (CI/CD) con GitHub Actions
+## 🧰 Integración Continua / Despliegue Continuo (CI/CD) con GitHub Actions
 
-Este proyecto utiliza GitHub Actions para CI/CD.
+### Pull Requests a la rama `main`:
 
-- En Pull Requests a la rama `main`:
-  - Corre pruebas (`pytest tests/`).
-  - Agrega comentarios en el PR con los resultados.
+- Se ejecuta el job `pruebas`.
+- Se ejecutan pruebas unitarias y se comenta el resultado.
 
-- En commits a `main`:
-  - Corre pruebas.
-  - Si pasan, construye y publica imagen Docker a GitHub Packages (`ghcr.io`).
+### Commits a la rama `main`:
 
-URL de ejemplo: `ghcr.io/tu_usuario/tu_repositorio:latest`
+- Se ejecuta `pruebas` y, si pasa, continúa con:
+  - `pruebas_y_publicacion`: construye la imagen Docker y la publica en GitHub Packages.
 
----
+### Imagen Docker Publicada
 
-## Contribuciones
+Encontrarás la imagen publicada en la sección "Packages" de tu repositorio:
 
-¡Las contribuciones son bienvenidas!
-
-1. Haz fork del repositorio.
-2. Crea una rama (`git checkout -b feature/nueva-funcionalidad`).
-3. Realiza tus cambios y asegúrate de que las pruebas pasen.
-4. Commit (`git commit -m 'feat: Añadir nueva funcionalidad X'`).
-5. Push (`git push origin feature/nueva-funcionalidad`).
-6. Abre un Pull Request.
+```
+ghcr.io/tu_usuario/tu_repositorio:latest
+```
 
 ---
 
-## Licencia
+## 🤝 Contribuciones
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
+¡Contribuciones son bienvenidas!
+
+1. Haz un fork.
+2. Crea una rama (`feature/nueva-funcionalidad`).
+3. Haz tus cambios y asegura que las pruebas pasen.
+4. Haz push y abre un Pull Request.
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
