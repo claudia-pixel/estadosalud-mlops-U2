@@ -11,6 +11,7 @@ on:
 permissions:
   pull-requests: write
   contents: read
+  packages: write
 
 jobs:
   pruebas:
@@ -36,8 +37,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Añadir la raíz del proyecto al PYTHONPATH
-        run: |
-          echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Correr pruebas unitarias con pytest
         run: pytest tests/
@@ -68,13 +68,14 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Añadir la raíz del proyecto al PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
+      - name: Definir nombre de usuario y branch
         run: |
-          echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+          echo "USERNAME_LOWER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "BRANCH_TAG=$(echo '${{ github.ref_name }}' | tr '/' '-')" >> $GITHUB_ENV
 
-      - name: Convertir nombre del repositorio a minúsculas
-        run: echo "REPO_NAME_LOWER=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
-      - name: Loguearse en GitHub Packages
+      - name: Iniciar sesión en GitHub Packages
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -86,8 +87,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ env.REPO_NAME_LOWER }}:${{ github.ref == 'refs/heads/main' && 'latest' || github.ref_name }}
+          tags: ghcr.io/${{ env.USERNAME_LOWER }}/estadosalud-mlops:${{ github.ref == 'refs/heads/main' && 'latest' || env.BRANCH_TAG }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.sha }}
             org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.created=${{ job.started_at }}
+            org.opencontainers.image.created=${{ github.run_started_at }}
